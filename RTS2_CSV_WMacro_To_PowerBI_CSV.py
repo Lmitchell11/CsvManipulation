@@ -43,7 +43,7 @@ for file in fileNames:              #Reads file
                     break
                 i = i + 1
         if (k2 > 1):
-            for k3 in range(1):
+            for k3 in range(0):
                 next(f)
         for line in f:              #for loop reads line by line in the file
             currentLine = line.split(",")       #splits up line into array, seperates based off commas (CSV format)
