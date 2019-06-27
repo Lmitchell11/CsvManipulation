@@ -12,30 +12,46 @@ import csv #imports functions/tools that allow the program to read/write .csv fi
 
 
 fileNames = []                      #initializes array list that will hold file names in the following folder
-for root, dirs, files in os.walk(r'C:\Users\...'): #reads all of the files in the folder path
+for root, dirs, files in os.walk(r'C:\Users\nzy5hy\OneDrive - NEXTEER AUTOMOTIVE\Desktop\Programming\Python Programs\Actual Program Test'): #reads all of the files in the folder path
     for file in files:              #for loop reads file by file in folder
         if file.endswith('.csv'):   #only reads .csv files
             fileNames.append(file)  #adds file name to list for later content-appending
-                             
+
+
+k1 = 0
+k2 = 0
+k3 = 0
 j = 0                               #initializes j counter for setting previous date in for loop
 daysCounter = 0                     #initializes dayCounter for iterating amount of days/(24h periods)
 fileContent= []                     #initializes array that will read lines in file and temporarily store them for writing function. 
-for file in fileNames:              #Reads file
+for file in fileNames:              #Reads file                        
     i = 0                           #initializes i counter for iterating through arrays/lines
+    if (k1 < 1):
+        k1 = 1
+        k2 = 1
     with open(file, "r+") as f:
+        if (k2 == 1):
+            for line in f:
+                currentLine = line.split(",")
+                if (i < 4):                         #Reads/skips first 4 lines while adding a comma to keep good csv format
+                    currentLine.append(",")         #adds comma to end of lines
+                    fileContent.append(currentLine) #adds line to end of fileContent array for later output
+                if (i == 4):                        #Line for headers in the file
+                    currentLine.append("New Time")  #adds new header to end of headers
+                    fileContent.append(currentLine)
+                if (i >=5):
+                    break
+                i = i + 1
+        if (k2 > 1):
+            for k3 in range(1):
+                next(f)
         for line in f:              #for loop reads line by line in the file
             currentLine = line.split(",")       #splits up line into array, seperates based off commas (CSV format)
-            if (i < 4):                         #Reads/skips first 4 lines while adding a comma to keep good csv format
-                currentLine.append(",")         #adds comma to end of lines
-                fileContent.append(currentLine) #adds line to end of fileContent array for later output
-            if (i == 4):                        #Line for headers in the file
-                currentLine.append("New Time")  #adds new header to end of headers
-                fileContent.append(currentLine)
             if (i >= 5):                            #All lines after the 5th line are for data
                 if (j < 1):                         #Uses j counter
                     previousDate = currentLine[0]   #sets first date
                     j = j + 1
-
+                    
                 if (previousDate in currentLine[0]):    #Checks to see if date is the same as the last lines
                     newTime = currentLine[1]            #Takes Time out of line, [1] is the cell in the line.split array
                     newTime1 = newTime[1:3]             #takes first 2 ints out of string Time, [1:3] because(') is used/stored to denote time in RTS2
@@ -53,6 +69,7 @@ for file in fileNames:              #Reads file
                     fileContent.append(currentLine)
             i = i + 1               #iterates once line is read, counting for if statements
     f.close()                       #closes file once all lines are read, "required"
+    k2 = 2
 
 i = 0                               #resets i counter for iterating to the next value in fileContent array while writing                     
 with open("All_Data_Appended_With_New_Time.csv", "w+") as f:
